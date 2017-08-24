@@ -57,30 +57,49 @@ Mat4f mult(Mat4f & A, Mat4f B)
 
 void populate(glm::mat4& src, Mat4f& dest)
 {
+#if defined(USE_MATRIX_ACCESSOR)
+    dest.m00 = src[0][0];
+    dest.m01 = src[0][1];
+    dest.m02 = src[0][2];
+    dest.m03 = src[0][3];
+    dest.m10 = src[1][0];
+    dest.m11 = src[1][1];
+    dest.m12 = src[1][2];
+    dest.m13 = src[1][3];
+    dest.m20 = src[2][0];
+    dest.m21 = src[2][1];
+    dest.m22 = src[2][2];
+    dest.m23 = src[2][3];
+    dest.m30 = src[3][0];
+    dest.m31 = src[3][1];
+    dest.m32 = src[3][2];
+    dest.m33 = src[3][3];
+#else
     dest.m[0]  = src[0][0];
-    dest.m[1]  = src[0][1];
-    dest.m[2]  = src[0][2];
-    dest.m[3]  = src[0][3];
-    dest.m[4]  = src[1][0];
+    dest.m[4]  = src[0][1];
+    dest.m[8]  = src[0][2];
+    dest.m[12] = src[0][3];
+    dest.m[1]  = src[1][0];
     dest.m[5]  = src[1][1];
-    dest.m[6]  = src[1][2];
-    dest.m[7]  = src[1][3];
-    dest.m[8]  = src[2][0];
-    dest.m[9]  = src[2][1];
+    dest.m[9]  = src[1][2];
+    dest.m[13] = src[1][3];
+    dest.m[2]  = src[2][0];
+    dest.m[6]  = src[2][1];
     dest.m[10] = src[2][2];
-    dest.m[11] = src[2][3];
-    dest.m[12] = src[3][0];
-    dest.m[13] = src[3][1];
-    dest.m[14] = src[3][2];
+    dest.m[14] = src[2][3];
+    dest.m[3]  = src[3][0];
+    dest.m[7]  = src[3][1];
+    dest.m[11] = src[3][2];
     dest.m[15] = src[3][3];
+#endif
 }
 
 void debugMat4f(Mat4f& src)
 {
-    printf(" %f %f %f %f\n", src.m[0], src.m[1], src.m[2], src.m[3]);
-    printf(" %f %f %f %f\n", src.m[4], src.m[5], src.m[6], src.m[7]);
-    printf(" %f %f %f %f\n", src.m[8], src.m[9], src.m[10], src.m[11]);
-    printf(" %f %f %f %f\n", src.m[12], src.m[13], src.m[14], src.m[15]);
+    printf(" %f %f %f %f\n", src.m[0], src.m[4], src.m[8], src.m[12]);
+    printf(" %f %f %f %f\n", src.m[1], src.m[5], src.m[9], src.m[13]);
+    printf(" %f %f %f %f\n", src.m[2], src.m[6], src.m[10], src.m[14]);
+    printf(" %f %f %f %f\n", src.m[3], src.m[7], src.m[11], src.m[15]);
 }
 
 int main()
@@ -95,7 +114,7 @@ int main()
     populate(Projection, myProj);
     populate(View, myView);
 
-    Mat4f myPV = mult(myView, myProj);
+    Mat4f myPV = mult(myProj, myView);
 
     printf("Projection Matrix --------------------------\n");
     printf("%s\n", glm::to_string(Projection).c_str());
